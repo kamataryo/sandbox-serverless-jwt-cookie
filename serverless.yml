@@ -1,0 +1,36 @@
+service: sandbox-serverless-jwt-cookie
+
+frameworkVersion: ">=1.41.1 <2.0.0"
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  memorySize: 256
+  region: ap-northeast-1
+  stage: dev
+  environment:
+    JWT_SECRET: ${env:JWT_SECRET, "my-secret"}
+    CREDENTIAL: ${env:CREDENTIAL, "kamataryo:my-password"}
+
+package:
+  exclude:
+    - __test__
+    - .circleci/**
+    - .git/**
+    - bin/**
+    - src/**
+    - .*
+    - jest*
+    - tsconfig.*
+    - package-lock.json
+    - yarn.lock
+    - README.md
+
+functions:
+  signup:
+    handler: src/authenticate.handler
+    events:
+      - http: POST authenticate

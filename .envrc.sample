@@ -1,0 +1,2 @@
+export JWT_SECRET=my-secret
+export CREDENTIAL=kamataryo:my-password

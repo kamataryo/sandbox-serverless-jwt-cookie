@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="text" id="url" placeholder="URL" />
+    <input type="text" id="username" placeholder="username" />
+    <input type="text" id="password" placeholder="password" />
+    <button id="authenticate">Authenticate</button>
+    <script>
+      const url = document.getElementById("url");
+      const username = document.getElementById("username");
+      const password = document.getElementById("password");
+      const authenticate = document.getElementById("authenticate");
+
+      [url, username, password].forEach((element, index) => {
+        const key = `element-${index}`;
+        element.value = localStorage.getItem(key) || "";
+        element.addEventListener("change", e => {
+          localStorage.setItem(key, e.target.value);
+        });
+      });
+
+      authenticate.addEventListener("click", () => {
+        fetch(url.value, {
+          method: "POST",
+          header: {
+            credentials: "includes",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            username: username.value,
+            password: password.value
+          })
+        })
+          .then(res => {
+            if (res.ok) {
+              return res.json();
+            } else {
+              throw res.text();
+            }
+          })
+          .then(console.log)
+          .catch(console.error);
+      });
+    </script>
+  </body>
+</html>
